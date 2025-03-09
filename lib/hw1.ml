@@ -97,8 +97,7 @@ let rec cartesian_N sets =
   | [] -> [ [] ]
   | set :: rest_sets ->
       let rest_product = cartesian_N rest_sets in
-      List.concat
-        (List.map (fun x -> List.map (fun y -> x :: y) rest_product) set)
+      concat (map (fun x -> map (fun y -> x :: y) rest_product) set)
 
 let fold_left f init ls =
   let rec helper acc f ls =
