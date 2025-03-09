@@ -1,0 +1,10 @@
+(library
+ (name FP)
+ (modules hw1)
+ (inline_tests)
+ (preprocess
+  (pps ppx_expect)))
+
+(executable
+ (name RBTree)
+ (modules RBTree))

@@ -1,0 +1,50 @@
+# Игнорировать скомпилированные файлы
+*.cmo
+*.cmi
+*.cmx
+*.cmxa
+*.cma
+*.cmxs
+*.cmt
+*.cmti
+*.annot
+*.o
+*.a
+*.exe
+*.out
+
+# Игнорировать сгенерированные файлы
+*.mlast
+*.mlast.d
+*.mliast
+*.mliast.d
+
+# Игнорировать директории сборки
+_build/
+_build*/
+.merlin
+
+# Игнорировать файлы зависимостей
+*.depend
+*.install
+
+# Игнорировать файлы редактора/IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Игнорировать файлы проекта Dune
+/_opam/
+/_build/
+/dune-workspace
+/dune-project
+/dune
+
+# Игнорировать локальные конфигурации
+.env
+.env.local
+
+# Игнорировать логи и временные файлы
+*.log
+*.tmp
