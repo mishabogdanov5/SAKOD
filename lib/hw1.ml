@@ -236,3 +236,38 @@ let%expect_test "base_fold_right_test_3" =
 let%expect_test "fold_left_test_3" =
   print_string (fold_left (fun x y -> y ^ x) "beg" [ "qqq"; "asd"; "frek" ]);
   [%expect {|frekasdqqqbeg|}]
+
+let%expect_test "cartesian_N_test_1" =
+  List.iter
+    (fun ls ->
+      print_string "[";
+      List.iter (fun x -> Printf.printf "%d, " x) ls;
+      print_string "]; ")
+    (cartesian_N [ [ 1; 2; 3 ]; [ 13; 14 ]; [ 4 ] ]);
+  [%expect
+    {|[1, 13, 4, ]; [1, 14, 4, ]; [2, 13, 4, ]; [2, 14, 4, ]; [3, 13, 4, ]; [3, 14, 4, ]; |}]
+
+let%expect_test "cartesian_N_test_2" =
+  List.iter
+    (fun ls ->
+      print_string "[";
+      List.iter (fun s -> Printf.printf "%s, " s) ls;
+      print_string "]; ")
+    (cartesian_N
+       [
+         [ "str1"; "str3"; "str5" ];
+         [ "str4"; "str5" ];
+         [ "str12"; "str15"; "str16" ];
+       ]);
+  [%expect
+    {|[str1, str4, str12, ]; [str1, str4, str15, ]; [str1, str4, str16, ]; [str1, str5, str12, ]; [str1, str5, str15, ]; [str1, str5, str16, ]; [str3, str4, str12, ]; [str3, str4, str15, ]; [str3, str4, str16, ]; [str3, str5, str12, ]; [str3, str5, str15, ]; [str3, str5, str16, ]; [str5, str4, str12, ]; [str5, str4, str15, ]; [str5, str4, str16, ]; [str5, str5, str12, ]; [str5, str5, str15, ]; [str5, str5, str16, ]; |}]
+
+let%expect_test "cartesian_N_test_3" =
+  List.iter
+    (fun ls ->
+      print_string "[";
+      List.iter (fun x -> Printf.printf "%d, " x) ls;
+      print_string "]; ")
+    (cartesian_N [ [ 1; 2; 3 ]; [ 13; 14 ]; [] ]);
+  [%expect
+    {| |}]
