@@ -91,7 +91,14 @@ let concat ls =
 
 (*чисто функциональные структуры данных*)
 let concat_map ls f = concat (map f ls)
-let cartesian_N = None
+
+let rec cartesian_N sets =
+  match sets with
+  | [] -> [ [] ]
+  | set :: rest_sets ->
+      let rest_product = cartesian_N rest_sets in
+      List.concat
+        (List.map (fun x -> List.map (fun y -> x :: y) rest_product) set)
 
 let fold_left f init ls =
   let rec helper acc f ls =
