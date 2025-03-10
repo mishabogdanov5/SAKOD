@@ -220,21 +220,28 @@ let%expect_test "fold_left_test_2" =
   [%expect {|begin:|}]
 
 let%expect_test "fold_right_test_1" =
-  print_int (fold_right (fun x y -> x + y) 0 [ 1; 2; 3; 4 ]);
+  print_int (fold_right (fun x y -> x + y) [ 1; 2; 3; 4 ] 0);
   [%expect {|10|}]
 
 let%expect_test "fold_right_test_2" =
-  print_string (fold_right (fun x y -> y ^ x) "beg" [ "qqq"; "asd"; "frek" ]);
-  [%expect {|begfrekasdqqq|}]
-
-let%expect_test "base_fold_right_test_3" =
-  print_string
-    (fold_right_base (fun x y -> x ^ y) [ "qqq"; "asd"; "frek" ] "beg");
+  print_string (fold_right (fun x y -> x ^ y) [ "qqq"; "asd"; "frek" ] "beg");
   [%expect {|qqqasdfrekbeg|}]
 
-let%expect_test "fold_left_test_3" =
-  print_string (fold_left (fun x y -> y ^ x) "beg" [ "qqq"; "asd"; "frek" ]);
-  [%expect {|frekasdqqqbeg|}]
+let%expect_test "fold_right_test_3" =
+  print_int (fold_right (fun x y -> x + (x mod y)) [ 16; 5; 10; 3; 6 ] 5);
+  [%expect {|22|}]
+
+let%expect_test "fold_left_from_right_test_1" =
+  print_string
+    (fold_left_from_fold_right
+       (fun x y -> x ^ y)
+       "beg" [ "qqq"; "asd"; "frek" ]);
+  [%expect {|begqqqasdfrek|}]
+
+let%expect_test "fold_left_from_right_test_2" =
+  print_int
+    (fold_left_from_fold_right (fun x y -> x + (x mod y)) 5 [ 3; 4; 10; 3; 6 ]);
+  [%expect {|16|}]
 
 let%expect_test "cartesian_N_test_1" =
   List.iter
@@ -268,5 +275,4 @@ let%expect_test "cartesian_N_test_3" =
       List.iter (fun x -> Printf.printf "%d, " x) ls;
       print_string "]; ")
     (cartesian_N [ [ 1; 2; 3 ]; [ 13; 14 ]; [] ]);
-  [%expect
-    {| |}]
+  [%expect {| |}]
