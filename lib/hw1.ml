@@ -106,10 +106,10 @@ let fold_left f init ls =
   helper init f ls
 
 let fold_right f lst acc =
-  fold_left (fun g x -> fun acc -> g (f x acc)) (fun x -> x) acc lst
+  (fold_left (fun g x -> fun acc -> g (f x acc)) (fun x -> x) lst) acc
 
-let rec fold_right_base f lst acc =
-  match lst with [] -> acc | x :: xs -> f x (fold_right_base f xs acc)
+let fold_left_from_fold_right f acc lst =
+  (fold_right (fun x g -> fun acc -> g (f acc x)) lst (fun x -> x)) acc
 
 let print_decart_2 ls1 ls2 =
   List.iter (fun (x, y) -> Printf.printf "(%d, %d) " x y) (cartesian ls1 ls2)
