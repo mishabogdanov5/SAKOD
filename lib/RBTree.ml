@@ -54,6 +54,42 @@ end = struct
     match ins s with
     | T (_, a, y, b) -> T (B, a, y, b)
     | _ -> failwith "unreachable"
+
+  let rec find_min = function
+    | E -> failwith "empty"
+    | T (_, E, y, _) -> y
+    | T (_, l, _, _) -> find_min l
+
+  let rec delete_min = function
+    | E -> E
+    | T (_, E, _, r) -> r
+    | T (color, a, y, b) -> balance (color, delete_min a, y, b)
+
+  let rec fix_deletion t =
+    match t with
+    | E -> E
+    | T (color, a, y, b) -> (
+        let balanced_tree = balance (color, a, y, b) in
+        match balanced_tree with
+        | T (R, a', y', b') -> T (B, a', y', b')
+        | _ -> balanced_tree)
+
+  let rec delete_elem x = function
+    | E -> E
+    | T (color, a, y, b) -> (
+        if x < y then balance (color, delete_elem x a, y, b)
+        else if x > y then balance (color, a, y, delete_elem x b)
+        else
+          match (a, b) with
+          | E, _ -> b
+          | _, E -> a
+          | _ ->
+              let min = find_min b in
+              balance (color, a, min, delete_min b))
+
+  let delete x t =
+    let tree = delete_elem x t in
+    fix_deletion tree
 end
 
 module S = RedBlackSet (Int)
