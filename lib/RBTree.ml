@@ -4,6 +4,7 @@ module type SET = sig
 
   val empty : t
   val add : elem -> t -> t
+  val delete : elem -> t -> t
   (*val member : elem -> t -> bool*)
 end
 
@@ -65,7 +66,7 @@ end = struct
     | T (_, E, _, r) -> r
     | T (color, a, y, b) -> balance (color, delete_min a, y, b)
 
-  let rec fix_deletion t =
+  let fix_deletion t =
     match t with
     | E -> E
     | T (color, a, y, b) -> (
@@ -125,11 +126,29 @@ let show_tree name (root : S.t) =
   let _ = Sys.command (Format.asprintf "xdg-open /tmp/%s.png" name) in
   ()
 
-let () =
+(*let () =
   let set = S.empty in
   let set = S.(set |> add 3 |> add 2 |> add 1) in
   show_tree "tree1" set;
   let set = S.(set |> add 6 |> add 5 |> add 4) in
-  show_tree "tree2" set
+  show_tree "tree2" set*)
+
+(*let () =
+  let set = S.empty in
+  let set = S.(set |> add 8 |> add 7 |> add 2 |> add 5) in
+  show_tree "del_tree_1_1" set;
+  let set = S.(set |> delete 6 |> delete 5 |> delete 2) in
+  show_tree "del_tree_1_2" set*)
+
+let () =
+  let set = S.empty in
+  let set =
+    S.(
+      set |> add 13 |> add 15 |> add 1 |> add 6 |> add 11 |> add 12 |> add 100
+      |> add 14 |> add 17 |> add 22)
+  in
+  show_tree "del_tree_2_1" set;
+  let set = S.(set |> delete 12 |> delete 8 |> delete 14) in
+  show_tree "del_tree_2_2" set
 
 (* https://www.cambridge.org/core/journals/journal-of-functional-programming/article/deletion-the-curse-of-the-redblack-tree/471C92AF3D431403FEE6C66FE070C492 *)
