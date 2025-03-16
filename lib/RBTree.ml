@@ -56,40 +56,40 @@ end = struct
     | T (_, a, y, b) -> T (B, a, y, b)
     | _ -> failwith "unreachable"
 
-  let rec find_min = function
-    | E -> failwith "empty"
-    | T (_, E, y, _) -> y
-    | T (_, l, _, _) -> find_min l
-
-  let rec delete_min = function
-    | E -> E
-    | T (_, E, _, r) -> r
-    | T (color, a, y, b) -> balance (color, delete_min a, y, b)
-
-  let fix_deletion t =
-    match t with
-    | E -> E
-    | T (color, a, y, b) -> (
-        let balanced_tree = balance (color, a, y, b) in
-        match balanced_tree with
-        | T (R, a', y', b') -> T (B, a', y', b')
-        | _ -> balanced_tree)
-
-  let rec delete_elem x = function
-    | E -> E
-    | T (color, a, y, b) -> (
-        if x < y then balance (color, delete_elem x a, y, b)
-        else if x > y then balance (color, a, y, delete_elem x b)
-        else
-          match (a, b) with
-          | E, _ -> b
-          | _, E -> a
-          | _ ->
-              let min = find_min b in
-              balance (color, a, min, delete_min b))
-
   let delete x t =
+    let rec delete_elem x = function
+      | E -> E
+      | T (color, a, y, b) -> (
+          if x < y then balance (color, delete_elem x a, y, b)
+          else if x > y then balance (color, a, y, delete_elem x b)
+          else
+            match (a, b) with
+            | E, _ -> b
+            | _, E -> a
+            | _ ->
+                let rec find_min = function
+                  | E -> failwith "empty"
+                  | T (_, E, y, _) -> y
+                  | T (_, l, _, _) -> find_min l
+                in
+                let min = find_min b in
+                let rec delete_min = function
+                  | E -> E
+                  | T (_, E, _, r) -> r
+                  | T (color, a, y, b) -> balance (color, delete_min a, y, b)
+                in
+                balance (color, a, min, delete_min b))
+    in
     let tree = delete_elem x t in
+
+    let fix_deletion = function
+      | E -> E
+      | T (color, a, y, b) -> (
+          let balanced_tree = balance (color, a, y, b) in
+          match balanced_tree with
+          | T (R, a', y', b') -> T (B, a', y', b')
+          | _ -> balanced_tree)
+    in
     fix_deletion tree
 end
 
@@ -133,12 +133,12 @@ let show_tree name (root : S.t) =
   let set = S.(set |> add 6 |> add 5 |> add 4) in
   show_tree "tree2" set*)
 
-(*let () =
+let () =
   let set = S.empty in
   let set = S.(set |> add 8 |> add 7 |> add 2 |> add 5) in
   show_tree "del_tree_1_1" set;
   let set = S.(set |> delete 6 |> delete 5 |> delete 2) in
-  show_tree "del_tree_1_2" set*)
+  show_tree "del_tree_1_2" set
 
 let () =
   let set = S.empty in
